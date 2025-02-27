@@ -1,0 +1,5 @@
+﻿{
+    "Lua.runtime.version": "Lua 5.4",
+    "Lua.workspace.library": ["C:\\Program Files (x86)\\LDoc"],
+    "Lua.workspace.checkThirdParty": false
+}
