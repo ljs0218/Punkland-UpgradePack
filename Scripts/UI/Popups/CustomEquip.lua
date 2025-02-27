@@ -9,15 +9,15 @@ local CustomEquip = LClient.CustomEquip
 
 local json_parse = json.parse
 
-Profile = {
+CustomEquipUI = {
     slotControls = {}
 }
 
-function Profile:Open()
+function CustomEquipUI:Open()
     self.slotControls = {} -- 장비 슬롯 컨트롤을 저장할 테이블
 
     local punkPanel = PunkPanel:new(Rect(-300, 50, UI_SETTINGS.size.x, UI_SETTINGS.size.y))
-    local profilePopup = Popup:new(punkPanel.backgroundPanel)
+    local profilePopup = Popup:new(punkPanel.backgroundPanel, "Profile")
     local titleText = Text(UI_SETTINGS.title) {
         anchor = Anchor.MiddleCenter,
         pivot = Point(0.5, 0.5),
@@ -44,7 +44,7 @@ function Profile:Open()
 
         slotButton.onClick.Add(function ()
             local itemPopup = ItemPopup:new(CustomEquip.GetEquipItem(equipType))
-            itemPopup:SetButtonA("해제", function ()
+            itemPopup:SetButton("해제", function ()
                 CustomEquip.UnequipItem(equipType)
                 itemPopup:Close()
             end)
@@ -59,7 +59,7 @@ function Profile:Open()
     punkPanel:Build()
 end
 
-function Profile:GetSlotControl(equipType)
+function CustomEquipUI:GetSlotControl(equipType)
     return self.slotControls[equipType]
 end
 
@@ -73,7 +73,7 @@ Client.GetTopic("CustomEquip.EquipItem").Add(function (equipType, titem)
 
     CustomEquip.Set(equipType, titem)
 
-    local slotControl = Profile:GetSlotControl(equipType)
+    local slotControl = CustomEquipUI:GetSlotControl(equipType)
     if slotControl then
         slotControl:SetItem(titem)
         slotControl:SetEquipped(true)
@@ -83,7 +83,7 @@ end)
 Client.GetTopic("CustomEquip.UnequipItem").Add(function (equipType)
     CustomEquip.Set(equipType, nil)
     
-    local slotControl = Profile:GetSlotControl(equipType)
+    local slotControl = CustomEquipUI:GetSlotControl(equipType)
     if slotControl then
         slotControl:SetItem(nil)
         slotControl:SetEquipped(false)
@@ -91,9 +91,9 @@ Client.GetTopic("CustomEquip.UnequipItem").Add(function (equipType)
 end)
 
 LClient.Events.onKeyDown:Add(function (key)
-    if key == "p" then
+    if key == "i" then
         ScreenUI.ShowPopup("Bag")
-        Profile:Open()
+        CustomEquipUI:Open()
     end
 end)
 

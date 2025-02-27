@@ -22,10 +22,11 @@ local Popup = {
 --- 
 --- popup:Build()
 --- @param control Game.Scripts.UI.Control
-function Popup:new(control)
+function Popup:new(control, id)
     assert(string_startsWith(typeof(control), "Game.Scripts.UI"))
 
     local instance = {
+        id = id,
         onUpdate = EventHandler:new(),
         onClose = EventHandler:new(),
         control = control,

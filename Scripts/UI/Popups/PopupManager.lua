@@ -1,29 +1,30 @@
 local PopupManager = {
-    popups = {}
+    popups = {},
+    popup_ids = {},
 }
 
 function PopupManager:AddPopup(popup)
+    if self.popup_ids[popup.id] then -- 이미 등록된 팝업이면
+        self.popup_ids[popup.id]:Close() -- 닫기
+    end
+
     table.insert(self.popups, popup)
+    self.popup_ids[popup.id] = popup
 end
 
 function PopupManager:RemovePopup(popup)
     for i, p in ipairs(self.popups) do
         if p == popup then
             table.remove(self.popups, i)
+            self.popup_ids[popup.id] = nil
             break
         end
     end
 end
 
 function PopupManager:OrderToFront(popup)
-    for i, p in ipairs(self.popups) do
-        if p == popup then
-            table.remove(self.popups, i)
-            table.insert(self.popups, popup)
-            break
-        end
-    end
-    
+    self:RemovePopup(popup)
+    self:AddPopup(popup)
 end
 
 Client.onTick.Add(function()

@@ -1,3 +1,4 @@
+local Popup = require("UI/Components/Popup")
 local Mask = require("UI/Components/Mask")
 local PunkPanel = require("UI/Components/PunkPanel")
 
@@ -9,24 +10,31 @@ local ItemPopup = {}
 --- 사용 예시:
 --- ```lua
 --- local itemPopup = ItemPopup:new(titem)
---- itemPopup:SetButtonA("출력", function ()
----     print(titem)
----     itemPopup:Close()
---- end)
+--- itemPopup:SetButton(
+---     "출력", function ()
+---         print(titem)
+---         itemPopup:Close()
+---     end,
+---    "닫기", function ()
+---        itemPopup:Close()
+---     end
+--- )
 ---```
 function ItemPopup:new(titem, position)
     local instance = {}
-    local maskControl = Mask:new()
-
+    
     position = position or Input.mousePosition
     position.x = position.x - Client.width
-
+    
     local punkPanel = PunkPanel:new(Rect(position.x, position.y, 240, 132))
     punkPanel.backgroundPanel.anchor = Anchor.TopRight
     punkPanel.backgroundPanel.pivot = Point(1, 0)
-    punkPanel.topPanel.sizeDelta = Point(punkPanel.topPanel.width, 55)
+    punkPanel.topPanel.height = 55
     punkPanel.closeButton.visible = false
-
+    
+    local itemPopup = Popup:new(punkPanel.backgroundPanel, "ItemPopup")
+    local maskControl = Mask:new(itemPopup)
+    
     local gameItem = Client_GetItem(titem.dataID)
 
     local topWrapper = Panel(Rect(0, 0, 216, punkPanel.topPanel.height)) {
@@ -87,10 +95,8 @@ function ItemPopup:new(titem, position)
     descText.SetSizeFit(false, true)
     descText.ForceRebuildLayoutImmediate()
 
-    punkPanel.centerPanel.sizeDelta = Point(punkPanel.centerPanel.width,
-        punkPanel.centerPanel.height + descText.height - 12)
-    punkPanel.backgroundPanel.sizeDelta = Point(punkPanel.backgroundPanel.width,
-        punkPanel.backgroundPanel.height + descText.height)
+    punkPanel.centerPanel.height = punkPanel.centerPanel.height + descText.height - 12
+    punkPanel.backgroundPanel.height = punkPanel.backgroundPanel.height + descText.height
 
     local function createButton(text, rect, anchor, pivot)
         local button = Button(text, rect) {
@@ -115,11 +121,23 @@ function ItemPopup:new(titem, position)
     punkPanel.centerPanel.AddChild(buttonA)
     punkPanel.centerPanel.AddChild(buttonB)
 
+    instance.popup = itemPopup
     instance.control = punkPanel
     instance.buttonA = buttonA
     instance.buttonB = buttonB
 
     maskControl:GetControl().AddChild(punkPanel.backgroundPanel)
+
+    if position.y + punkPanel.backgroundPanel.height > Client.height then -- y축이 화면 밖으로 나가면
+        punkPanel.backgroundPanel.position = Point(punkPanel.backgroundPanel.position.x,
+            Client.height - punkPanel.backgroundPanel.height)
+    end
+
+    itemPopup.onClose:Add(function()
+        maskControl:Close()
+    end)
+
+    itemPopup:Build()
     punkPanel:Build()
 
     self.__index = self
@@ -128,6 +146,19 @@ end
 
 function ItemPopup:GetControl()
     return self.control:GetControl()
+end
+
+function ItemPopup:SetButton(buttonA_text, buttonA_callback, buttonB_text, buttonB_callback)
+    assert(buttonA_text and buttonA_callback)
+
+    self:SetButtonA(buttonA_text, buttonA_callback)
+    if buttonB_text and buttonB_callback then
+        self:SetButtonB(buttonB_text, buttonB_callback)
+    else
+        self.buttonA.pivot = Point(0.5, 1)
+        self.buttonA.position = Point(0, -10)
+        self.buttonA.sizeDelta = Point(216, 35)
+    end
 end
 
 function ItemPopup:SetButtonA(text, callback)
@@ -143,7 +174,7 @@ function ItemPopup:SetButtonB(text, callback)
 end
 
 function ItemPopup:Close()
-    self.control:GetControl().Destroy()
+    self.popup:Close()
 end
 
 return ItemPopup

@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "name": "골드",
+        "type": "gameMoney"
+    },
+    {
+        "id": 2,
+        "name": "큐브",
+        "type": "cube"
+    },
+    {
+        "id": 3,
+        "name": "다이아몬드",
+        "type": "item"
+    },
+    {
+        "id": 4,
+        "name": "포인트",
+        "type": "var"
+    }
+]

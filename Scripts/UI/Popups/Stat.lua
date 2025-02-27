@@ -6,7 +6,7 @@ UIStat = {}
 
 function UIStat:Open()
     local punkPanel = PunkPanel:new(Rect(0, 0, 312, 412))
-    local statPopup = Popup:new(punkPanel.backgroundPanel)
+    local statPopup = Popup:new(punkPanel.backgroundPanel, "Stat")
     local titleText = Text("스텟") {
         anchor = Anchor.MiddleCenter,
         pivot = Point(0.5, 0.5),

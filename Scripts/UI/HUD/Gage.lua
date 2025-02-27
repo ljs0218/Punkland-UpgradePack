@@ -91,13 +91,6 @@ HP.AddChild(HP_edge)
 MP.AddChild(MP_edge)
 XP.AddChild(XP_edge)
 
--- 숫자 3자리마다 , 찍기
-function C_commaValue(n)
-    local left, num, right = string.match(n, "^([^%d]*%d)(%d*)(.-)$")
-
-    return left .. (num:reverse():gsub("(%d%d%d)", "%1,"):reverse()) .. right
-end
-
 -- 텍스트 설정 함수
 local function createText(rect, anchor, textSize, textAlign)
     local text = Text("", rect)
@@ -206,9 +199,9 @@ local function updateGauge()
     --LVtxt.DOScale(Point(1, 1.05), 0.1)
     if power_use then
         local power, atk, def = getPower()
-        cp.power_text.text = C_commaValue(math.floor(power))
-        cp.atk_text.text = C_commaValue(atk)
-        cp.def_text.text = C_commaValue(def)
+        cp.power_text.text = LUtility.FormatNumber(math.floor(power))
+        cp.atk_text.text = LUtility.FormatNumber(atk)
+        cp.def_text.text = LUtility.FormatNumber(def)
         XPtxt.y = -37
     end
 

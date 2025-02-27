@@ -28,8 +28,9 @@ require("UI/HUD/Chat")
 
 -- Popup 로드
 require("UI/Popups/PopupManager")
-require("UI/Popups/Profile")  
+require("UI/Popups/CustomEquip")  
 require("UI/Popups/Stat")
 require("UI/Popups/Shop")
+require("UI/Popups/ShopBuy")
 
 return UIManager

@@ -15,14 +15,20 @@ local Config = {
     -- UI 설정
     UI = {
         CustomEquip = {
-            title = "커스텀 장비",  -- 커스텀 장비 팝업의 제목입니다.
-            size = Point(280, 256),  -- 커스텀 장비 팝업의 크기입니다.
+            title = "커스텀 장비", -- 커스텀 장비 팝업의 제목입니다.
+            size = Point(280, 256), -- 커스텀 장비 팝업의 크기입니다.
             -- 타입별 장비 슬롯의 위치입니다.
             slotPosition = {
                 [1] = Point(0, -26),
                 [2] = Point(0, 26),
             },
-        }
+        },
+
+        Shop = {
+            categorySize = Point(126, 42), -- 상점 카테고리 버튼의 크기입니다.
+            productScrollPadding = 20,     -- 상품 스크롤의 패딩입니다.
+            productSpacing = 10,           -- 상품 간의 간격입니다.
+        },
     },
 }
 
