@@ -11,6 +11,7 @@ LClient.Events = {
     -- UI가 화면에서 사라질 때 발생하는 이벤트
     onHideUI = EventHandler:new(),
     onKeyDown = EventHandler:new(),
+    onEverySecond = EventHandler:new(),
 }
 
 local function checkCreateUnit() -- myPlayerUnit 객체가 생성되었는지 확인하는 함수

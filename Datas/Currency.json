@@ -15,12 +15,14 @@
         "id": 3,
         "name": "다이아몬드",
         "type": "item",
+        "dataID": 5,
         "color": "#D7A504"
     },
     {
         "id": 4,
         "name": "포인트",
         "type": "var",
+        "dataID": 5,
         "color": "#D7A504"
     }
 ]

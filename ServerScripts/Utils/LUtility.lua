@@ -1,3 +1,5 @@
+local ipairs = ipairs
+
 local LUtility = {}
 
 function LUtility.OptionsToArray(options)

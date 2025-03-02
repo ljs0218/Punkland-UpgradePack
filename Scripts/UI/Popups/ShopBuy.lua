@@ -13,7 +13,7 @@ function ShopUI.Buy(productId)
 
     local count = 1
 
-    local punkPanel = PunkPanel:new(Rect(0, 0, 306, 260))
+    local punkPanel = PunkPanel:new(Rect(0, 0, 306, 260 + 18))
     local shopPopup = Popup:new(punkPanel.backgroundPanel, "ShopBuy")
     local maskControl = Mask:new(shopPopup, false)
     local titleText = Text("아이템 개수 입력") {
@@ -107,6 +107,31 @@ function ShopUI.Buy(productId)
     itemPanel.AddChild(totalPriceIText)
     itemPanel.AddChild(totalPriceText)
 
+    local currencyPanel = Panel(Rect(0, 52, punkPanel.centerPanel.width - 74, 20))
+    currencyPanel.anchor = Anchor.TopRight
+    currencyPanel.pivot = Point(1, 0)
+    currencyPanel.opacity = 0
+    local currencyIText = Text("보유 금액") {
+        anchor = Anchor.MiddleLeft,
+        pivot = Point(0, 0.5),
+        textSize = 13,
+    }
+    currencyIText.SetSizeFit(true, true)
+    local currencyText = Text(string.format(
+        "<color=%s>%s %s</color>",
+        currency.color,
+        LUtility.FormatNumber(Currency.GetAmount(product.currencyId)),
+        currency.name
+    )) {
+        anchor = Anchor.MiddleRight,
+        pivot = Point(1, 0.5),
+        textSize = 13,
+    }
+    currencyText.SetSizeFit(true, true)
+    currencyPanel.AddChild(currencyIText)
+    currencyPanel.AddChild(currencyText)
+    punkPanel.centerPanel.AddChild(currencyPanel)
+
     local countField = InputField(Rect(0, -86, punkPanel.centerPanel.width, 35)) {
         anchor = Anchor.BottomCenter,
         pivot = Point(0.5, 1),
@@ -131,7 +156,7 @@ function ShopUI.Buy(productId)
         end
 
         count = newCount
-        
+
         totalPriceText.text = string.format(
             "<color=%s>%s %s</color>",
             currency.color,
@@ -139,6 +164,7 @@ function ShopUI.Buy(productId)
             currency.name
         )
         countField.text = count
+
         if count > 1 then
             countText.text = count
         else
@@ -165,7 +191,7 @@ function ShopUI.Buy(productId)
         textSize = 17,
     }
     minusButton.SetImage("Pictures/New_PunkGUI/0_panel.png")
-    minusButton.onClick.Add(function ()
+    minusButton.onClick.Add(function()
         countField.text = count - 1
     end)
     local plusButton = Button("+", Rect(-5, 0, 25, 25)) {
@@ -174,7 +200,7 @@ function ShopUI.Buy(productId)
         textSize = 17,
     }
     plusButton.SetImage("Pictures/New_PunkGUI/0_panel.png")
-    plusButton.onClick.Add(function ()
+    plusButton.onClick.Add(function()
         countField.text = count + 1
     end)
 
@@ -199,23 +225,24 @@ function ShopUI.Buy(productId)
     plus100Button.position = Point(plus100Button.x, -45)
     maxButton.position = Point(maxButton.x, -45)
 
-    plus10Button.onClick.Add(function ()
+    plus10Button.onClick.Add(function()
         countField.text = count + 10
     end)
 
-    plus100Button.onClick.Add(function ()
+    plus100Button.onClick.Add(function()
         countField.text = count + 100
     end)
 
-    maxButton.onClick.Add(function ()
+    maxButton.onClick.Add(function()
         countField.text = getMaxCount()
     end)
 
     local confirmButton = CreateButton("확인", Anchor.BottomLeft, Point(0, 1), Point(132, 35), 13)
     local cancelButton = CreateButton("취소", Anchor.BottomRight, Point(1, 1), Point(132, 35), 13)
 
-    confirmButton.onClick.Add(function ()
+    confirmButton.onClick.Add(function()
         Shop.Buy(productId, count)
+        shopPopup:Close()
     end)
 
     cancelButton.onClick.Add(function()
@@ -236,7 +263,3 @@ function ShopUI.Buy(productId)
     shopPopup:Build()
     punkPanel:Build()
 end
-
-LClient.Events.onMyPlayerUnitCreated:Add(function()
-    ShopUI.Buy(1)
-end)

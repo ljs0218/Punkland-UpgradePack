@@ -3,6 +3,7 @@ local DragArea = require("UI/Components/DragArea")
 local ItemPopup = require("UI/Components/ItemPopup")
 local PunkPanel = require("UI/Components/PunkPanel")
 
+local ipairs = ipairs
 local Client_GetItem = Client.GetItem
 
 local SHOP_DATA = Shop.GetData()
@@ -117,7 +118,7 @@ function ShopUI:RefreshProducts(productIds)
         priceWrapper.childAlign = 4
         priceWrapper.spacing = 4
 
-        local priceIcon = Image("Pictures/Currency/" .. product.currencyId .. ".png", Rect(0, 0, 24, 24)) {
+        local priceIcon = Image(Currency.GetPath(product.currencyId), Rect(0, 0, 24, 24)) {
             anchor = Anchor.MiddleLeft,
             pivot = Point(0, 0.5),
         }
@@ -170,7 +171,6 @@ function ShopUI:RefreshProducts(productIds)
         iconImage.SetImageID(gameItem.imageID)
 
         productButton.onClick.Add(function()
-            print("상품 " .. gameItem.name)
             local itemPopup = ItemPopup:new({ dataID = product.dataID })
             itemPopup:SetButton("구매하기", function()
                 itemPopup:Close()

@@ -16,37 +16,67 @@ end
 --- @param unit Commons.Server.Scripts.ScriptUnit
 --- @param productId number
 --- @param count number
-function Shop.GetReward(unit, productId, count)
-    -- 상점 보상 지급 제작
+function Shop.GiveReward(unit, productId, count)
+    if not unit then return end
+    
+    -- 상품이 존재하지 않을 경우 리턴
     local product = Shop.GetProduct(productId)
     if not product then
-        print("ERROR")
         return
     end
 
     local gameItem = Server_GetItem(product.dataID)
-    local titem = Server_CreateItem(product.dataID, count)
-    unit.AddItemByTItem(titem, false)
+    unit.AddItem(product.dataID, count, false)
     unit.SendCenterLabel(gameItem.name .. " 아이템을 구매했습니다!")
 end
 
-Server.GetTopic("Shop.Buy").Add(function (productId, count)
+--- @param unit Commons.Server.Scripts.ScriptUnit
+--- @param productId number
+--- @param count number
+function Shop.Buy(unit, productId, count)
+    if not unit then return end
+
     assert(type(productId) == "number")
-
-    print("Shop.Buy", productId, count)
-end)
-
---- @param player Commons.Server.Scripts.ScriptRoomPlayer
-Server.onBuyItem.Add(function (player, productId, unknown, amount)
-    productId = assert(tonumber(productId))
-
-    local product = Shop.GetProduct(productId)
-    if not product then
-        print("ERROR")
+    assert(type(count) == "number")
+    
+    -- 1개 미만으로 구매할 경우 리턴
+    if count < 1 then
         return
     end
     
-    Shop.GetReward(player.unit, productId, math_floor(amount / product.price))
+    -- 상품이 존재하지 않을 경우 리턴
+    local product = Shop.GetProduct(productId)
+    if not product then
+        return
+    end
+
+    local totalPrice = product.price * count
+
+    -- 소지금이 부족할 경우
+    if totalPrice > LUnit.Currency.GetAmount(unit, product.currencyId) then
+        unit.SendCenterLabel("<color=#FF0000>소지금이 부족합니다.</color>")
+        return
+    end
+
+    LUnit.Currency.AddAmount(unit, product.currencyId, -totalPrice)
+    Shop.GiveReward(unit, productId, count)
+end
+
+Server.GetTopic("Shop.Buy").Add(function(productId, count)
+    Shop.Buy(unit, productId, count)
+end)
+
+--- @param player Commons.Server.Scripts.ScriptRoomPlayer
+Server.onBuyItem.Add(function(player, productId, unknown, amount)
+    productId = assert(tonumber(productId))
+
+    -- 상품이 존재하지 않을 경우 리턴
+    local product = Shop.GetProduct(productId)
+    if not product then
+        return
+    end
+
+    Shop.GiveReward(player.unit, productId, math_floor(amount / product.price))
 end)
 
 return Shop
