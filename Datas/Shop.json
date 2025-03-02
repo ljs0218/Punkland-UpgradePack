@@ -1,0 +1,85 @@
+{
+    "products": [
+        {
+            "id": 1,
+            "dataID": 1,
+            "price": 1000,
+            "currencyId": 1,
+            "description": "설명1"
+        },
+        {
+            "id": 2,
+            "dataID": 2,
+            "price": 1000,
+            "currencyId": 2,
+            "description": "설명1"
+        },
+        {
+            "id": 3,
+            "dataID": 5,
+            "price": 1000,
+            "currencyId": 3,
+            "description": "설명1"
+        },
+        {
+            "id": 4,
+            "dataID": 6,
+            "price": 1000,
+            "currencyId": 4,
+            "description": "설명1"
+        }
+    ],
+    "subCategories": [
+        {
+            "id": 1,
+            "name": "서브카테고리1",
+            "productIds": [
+                1,
+                2,
+                3,
+                4
+            ]
+        },
+        {
+            "id": 2,
+            "name": "서브카테고리2",
+            "productIds": [
+                1,
+                3,
+                4
+            ]
+        },
+        {
+            "id": 3,
+            "name": "서브카테고리3",
+            "productIds": [
+                1,
+                4
+            ]
+        },
+        {
+            "id": 4,
+            "name": "서브카테고리4",
+            "productIds": [
+                3,
+                4
+            ]
+        }
+    ],
+    "categories": [
+        {
+            "name": "카테고리 A",
+            "subCategoryIds": [
+                1,
+                2
+            ]
+        },
+        {
+            "name": "카테고리 B",
+            "subCategoryIds": [
+                3,
+                4
+            ]
+        }
+    ]
+}

@@ -2,21 +2,25 @@
     {
         "id": 1,
         "name": "골드",
-        "type": "gameMoney"
+        "type": "gameMoney",
+        "color": "#D7A504"
     },
     {
         "id": 2,
         "name": "큐브",
-        "type": "cube"
+        "type": "cube",
+        "color": "#9202BF"
     },
     {
         "id": 3,
         "name": "다이아몬드",
-        "type": "item"
+        "type": "item",
+        "color": "#D7A504"
     },
     {
         "id": 4,
         "name": "포인트",
-        "type": "var"
+        "type": "var",
+        "color": "#D7A504"
     }
 ]

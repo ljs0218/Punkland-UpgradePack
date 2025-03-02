@@ -38,6 +38,8 @@ CustomEquip = require("System/CustomEquip")
 KeyManager = require("System/KeyManager")
 TimeManager = require("System/TimeManager")
 require("System/DamageCallback")
+Currency = require("System/Currency")
+Shop = require("System/Shop")
 
 UIManager = require("UI/UIManager") -- UI 매니저 로드
 

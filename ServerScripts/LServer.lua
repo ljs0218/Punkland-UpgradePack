@@ -42,7 +42,8 @@ end)
 LServer.VAR = require("Constants/Var") -- UI 상수 로드
 
 -- 스크립트 로드
+LUtility = require("Utils/LUtility") -- 유틸리티 로드
 TimeManager = require("System/TimeManager")
 CustomEquip = require("System/CustomEquip")
+Shop = require("System/Shop")
 require("UI/HUD/Chat")
-LUtility = require("Utils/LUtility") -- 유틸리티 로드

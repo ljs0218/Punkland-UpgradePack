@@ -119,7 +119,7 @@ MainMenu.menu_item[2].onClick.Add(
 -- 큐브
 MainMenu.menu_item[3].onClick.Add(
     function()
-        ScreenUI.ShowPopup("CubeShop")
+        ShopUI:Open()
         MainMenu:hide()
     end
 )
