@@ -29,6 +29,12 @@ local Config = {
             productScrollPadding = 20,     -- 상품 스크롤의 패딩입니다.
             productSpacing = 10,           -- 상품 간의 간격입니다.
         },
+
+        HUD = {
+            Currency = {
+                ids = { 1, 2, 3 },
+            }
+        }
     },
 }
 

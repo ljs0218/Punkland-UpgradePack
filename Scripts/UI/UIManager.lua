@@ -25,6 +25,7 @@ require("UI/HUD/Menu")
 require("UI/HUD/Gage")
 require("UI/HUD/Dpad")
 require("UI/HUD/Chat")
+require("UI/HUD/Currency")
 
 -- Popup 로드
 require("UI/Popups/PopupManager")

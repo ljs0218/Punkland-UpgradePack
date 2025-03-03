@@ -9,6 +9,10 @@ function Currency.Get(currencyId)
     return CURRENCY_DATA[currencyId]
 end
 
+function Currency.GetData()
+    return Currency.data
+end
+
 function Currency.GetPath(currencyId)
     return "Pictures/Currency/" .. currencyId .. ".png"
 end
@@ -33,7 +37,7 @@ function Currency.GetAmount(currencyId)
         return Currency.data.varDatas[tostring(currency.dataID)]
     end
 
-    return 500000
+    return 0
 end
 
 Client.GetTopic("Currency.Update").Add(function (data)
