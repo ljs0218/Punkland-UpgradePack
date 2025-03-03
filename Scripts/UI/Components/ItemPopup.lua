@@ -82,10 +82,11 @@ function ItemPopup:new(titem, position)
     }
     canText.SetSizeFit(true, true)
 
-    local descText = Text(gameItem.desc, Rect(0, 10, 216, 0)) {
+    local descText = Text(LUtility.Item.ParseDesc(titem, gameItem.desc), Rect(0, 10, 216, 0)) {
         anchor = Anchor.TopCenter,
         pivot = Point(0.5, 0),
         textSize = 13,
+        lineSpacing = 1.2,
     }
 
     if titem.options and #titem.options > 0 then

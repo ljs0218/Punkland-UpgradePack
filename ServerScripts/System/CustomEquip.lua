@@ -1,4 +1,6 @@
 local type = type
+local pairs = pairs
+local ipairs = ipairs
 local assert = assert
 local tostring = tostring
 local json_parse = json.parse
@@ -117,6 +119,47 @@ end
 function CustomEquip.Save(unit, unitData)
     unitData = unitData or CustomEquip.GetUnitData(unit)
     unit.SetStringVar(CUSTOM_EQUIP_VAR, json_serialize(unitData))
+
+    CustomEquip.RefreshStats(unit)
+    unit.RefreshStats()
+end
+
+function CustomEquip.RefreshStats(unit)
+    local unitData = CustomEquip.GetUnitData(unit)
+    if not unitData then
+        return
+    end
+
+    local stats = {}
+    for equipType, titem in pairs(unitData) do
+        local statPlus = LUtility.Item.GetStats(titem.dataID, titem.level, 2)
+    
+        local optionStats = {}
+        if #titem.options > 0 then
+            for _, option in ipairs(titem.options) do
+                if not optionStats[option.statID] then
+                    optionStats[option.statID] = {}
+                end
+                
+                if not optionStats[option.statID][option.type] then
+                    optionStats[option.statID][option.type] = 0
+                end
+                
+                optionStats[option.statID][option.type] = optionStats[option.statID][option.type] + option.value
+            end
+        end
+        
+        for statID, option in pairs(optionStats) do
+            local addStat = option[1] or 0
+            local addItemPlusStat = option[3] or 0
+            local addItemPercentStat = option[4] or 0
+    
+            local statPlusOption = (addStat + addItemPlusStat) + (statPlus[statID] * (addItemPercentStat * 0.01))
+            stats[tostring(statID)] = statPlusOption + statPlus[statID]
+        end
+    end
+
+    unit.customData.stats.customEquip = stats
 end
 
 function CustomEquip.SendUpdated(unit)
@@ -135,7 +178,7 @@ Server.onEquipItem.Add(function(unit, titem)
     end
 
     local data = CustomEquip.GetItemData(titem.dataID)
-    if data then
+    if data then -- 커스텀 장비 데이터가 존재 할 경우
         if CustomEquip.EquipItem(unit, titem) then
             return
         end
@@ -147,6 +190,10 @@ end)
 
 Server.GetTopic("CustomEquip.UnequipItem").Add(function(equipType)
     CustomEquip.UnequipItem(unit, equipType, true)
+end)
+
+Server.onJoinPlayer.Add(function (player)
+    CustomEquip.RefreshStats(player.unit)
 end)
 
 -- TODO: CustomEquip 스텟 계산 추가

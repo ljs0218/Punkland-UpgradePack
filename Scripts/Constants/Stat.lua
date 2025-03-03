@@ -20,10 +20,31 @@ Stat = {
     MAX_MP = 5
 }
 
-function Stat.GetName(statID)
+function Stat.GetKey(statID)
     local statKey = statKeys[statID]
     if not statKey and statID > 100 then
         statKey = "custom" .. tostring(statID - 100)
     end
+
+    return statKey
+end
+
+function Stat.GetName(statID)
+    local statKey = Stat.GetKey(statID)
     return strings[statKey]
+end
+
+function Stat.GetId(name)
+    for id, key in pairs(statKeys) do
+        if key == name then
+            return id
+        end
+    end
+    if string.sub(name, 1, 6) == "custom" then
+        local customId = tonumber(string.sub(name, 7))
+        if customId then
+            return customId + 100
+        end
+    end
+    return nil
 end
