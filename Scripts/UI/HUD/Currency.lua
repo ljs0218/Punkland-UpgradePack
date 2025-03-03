@@ -12,11 +12,12 @@ for _, currencyId in pairs(UI_SETTINGS.ids) do
     local currencyPanel = HorizontalPanel()
     currencyPanel.spacing = 3
     currencyPanel.childAlign = 3
-    
+
     local currencyIcon = Image(Currency.GetPath(currencyId), Rect(0, 0, 22, 22))
     currencyIcon.anchor = Anchor.MiddleLeft
     currencyIcon.pivot = Point(0, 0.5)
-
+    currencyIcon.raycastTarget = false
+    
     local currencyText = Text("1,000")
     currencyText.textAlign = TextAlign.MiddleLeft
     currencyText.textSize = 14
@@ -24,11 +25,12 @@ for _, currencyId in pairs(UI_SETTINGS.ids) do
     currencyText.borderDistance = Point(0.7, 0.7)
     currencyText.borderColor = Color.black
     currencyText.SetSizeFit(true, true)
+    currencyText.raycastTarget = false
 
     currencyPanel.AddChild(currencyIcon)
     currencyPanel.AddChild(currencyText)
     currencyPanel.SetSizeFit(true, true)
-    
+
     wrapper.AddChild(currencyPanel)
 
     currencyControls[tostring(currencyId)] = {
@@ -39,7 +41,7 @@ end
 
 wrapper.SetSizeFit(true, true)
 
-LClient.Events.onEverySecond:Add(function ()
+LClient.Events.onEverySecond:Add(function()
     for currencyId, currencyControl in pairs(currencyControls) do
         currencyControl.textControl.text = LUtility.FormatNumber(Currency.GetAmount(tonumber(currencyId)))
         currencyControl.textControl.SetSizeFit(true, true)
@@ -48,4 +50,12 @@ LClient.Events.onEverySecond:Add(function ()
     end
     wrapper.SetSizeFit(true, true)
     wrapper.ForceRebuildLayoutImmediate()
+end)
+
+LClient.Events.onShowUI:Add(function()
+    wrapper.visible = true
+end)
+
+LClient.Events.onHideUI:Add(function()
+    wrapper.visible = false
 end)

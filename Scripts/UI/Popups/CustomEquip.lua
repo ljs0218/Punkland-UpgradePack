@@ -10,10 +10,15 @@ local CustomEquip = LClient.CustomEquip
 local json_parse = json.parse
 
 CustomEquipUI = {
+    popup = nil,
     slotControls = {}
 }
 
 function CustomEquipUI:Open()
+    if self.popup then
+        return
+    end
+
     self.slotControls = {} -- 장비 슬롯 컨트롤을 저장할 테이블
 
     local punkPanel = PunkPanel:new(Rect(-300, 50, UI_SETTINGS.size.x, UI_SETTINGS.size.y))
@@ -57,6 +62,15 @@ function CustomEquipUI:Open()
 
     profilePopup:Build()
     punkPanel:Build()
+
+    self.popup = profilePopup
+end
+
+function CustomEquipUI:Close()
+    if self.popup then
+        self.popup:Close()
+        self.popup = nil
+    end
 end
 
 function CustomEquipUI:GetSlotControl(equipType)
@@ -93,10 +107,15 @@ end)
 LClient.Events.onKeyDown:Add(function (key)
     if key == "i" then
         ScreenUI.ShowPopup("Bag")
-        CustomEquipUI:Open()
     end
 end)
 
 LClient.Events.onMyPlayerUnitCreated:Add(function ()
-    ChatUI.visible = true
+    Client.onTick.Add(function ()
+        if ScreenUI.IsShowPopup("Bag") then
+            CustomEquipUI:Open()
+        else
+            CustomEquipUI:Close()
+        end
+    end)
 end)

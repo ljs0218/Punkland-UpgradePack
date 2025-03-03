@@ -61,24 +61,26 @@ function Item.GetLimitJobs(dataID)
 end
 
 function Item.ParseDesc(titem, desc)
+    if not titem.options or #titem.options == 0 then
+        return desc
+    end
+
     local statPlus = Item.GetStats(titem.dataID, titem.level, 2)
     local statPercent = Item.GetStats(titem.dataID, titem.level, 0)
 
     local optionStats = {}
-    if #titem.options > 0 then
-        for _, option in ipairs(titem.options) do
-            if not optionStats[option.statID] then
-                optionStats[option.statID] = {}
-            end
-            
-            if not optionStats[option.statID][option.type] then
-                optionStats[option.statID][option.type] = 0
-            end
-            
-            optionStats[option.statID][option.type] = optionStats[option.statID][option.type] + option.value
+    for _, option in ipairs(titem.options) do
+        if not optionStats[option.statID] then
+            optionStats[option.statID] = {}
         end
+
+        if not optionStats[option.statID][option.type] then
+            optionStats[option.statID][option.type] = 0
+        end
+
+        optionStats[option.statID][option.type] = optionStats[option.statID][option.type] + option.value
     end
-    
+
     local statPlusOption = {}
     local statPlusTotal = {}
     for statID, option in pairs(optionStats) do
@@ -99,11 +101,11 @@ function Item.ParseDesc(titem, desc)
         desc = string.gsub(desc, "{{" .. Stat.GetKey(statID) .. "PlusOption}}", statPlusOption[statID])
         desc = string.gsub(desc, "{{" .. Stat.GetKey(statID) .. "PlusTotal}}", statPlusTotal[statID])
     end
-    
+
     for statID, value in pairs(statPlus) do
         desc = string.gsub(desc, "{{" .. Stat.GetKey(statID) .. "Plus}}", value)
     end
-    
+
     for statID, value in pairs(statPercent) do
         desc = string.gsub(desc, "{{" .. Stat.GetKey(statID) .. "Percent}}", value)
     end
