@@ -16,8 +16,6 @@ local LIMIT_TYPES = {
     Account = "계정",
 }
 
-UIShop = {}
-
 local function ClearScrollContent(scroll)
     if scroll.content then
         scroll.content.Destroy()

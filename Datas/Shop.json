@@ -4,29 +4,25 @@
             "id": 1,
             "dataID": 1,
             "price": 1000,
-            "currencyId": 1,
-            "description": "설명1"
+            "currencyId": 1
         },
         {
             "id": 2,
             "dataID": 2,
             "price": 1000,
-            "currencyId": 2,
-            "description": "설명1"
+            "currencyId": 2
         },
         {
             "id": 3,
             "dataID": 5,
             "price": 1000,
-            "currencyId": 3,
-            "description": "설명1"
+            "currencyId": 3
         },
         {
             "id": 4,
             "dataID": 6,
             "price": 1000,
-            "currencyId": 4,
-            "description": "설명1"
+            "currencyId": 4
         }
     ],
     "subCategories": [

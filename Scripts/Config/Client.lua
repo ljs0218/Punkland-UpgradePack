@@ -31,6 +31,7 @@ local Config = {
         },
 
         HUD = {
+            -- 화면에 보일 재화 ID 리스트입니다.
             Currency = {
                 ids = { 1, 2, 3 },
             }

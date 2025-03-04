@@ -1,3 +1,6 @@
+local string_gsub = string.gsub
+local string_gmatch = string.gmatch
+
 local traitData = Utility.JSONParseFromFile("ItemTrait.json")
 
 --[[
@@ -19,6 +22,8 @@ local Item = {}
 --- @param type number
 --- @return table
 function Item.GetStats(dataID, level, type)
+    level = level or 0
+
     local data = GetTraitData(dataID)
     if not (data and data.options) then
         return {}
@@ -61,55 +66,61 @@ function Item.GetLimitJobs(dataID)
 end
 
 function Item.ParseDesc(titem, desc)
-    if not titem.options or #titem.options == 0 then
-        return desc
-    end
-
     local statPlus = Item.GetStats(titem.dataID, titem.level, 2)
     local statPercent = Item.GetStats(titem.dataID, titem.level, 0)
 
-    local optionStats = {}
-    for _, option in ipairs(titem.options) do
-        if not optionStats[option.statID] then
-            optionStats[option.statID] = {}
-        end
-
-        if not optionStats[option.statID][option.type] then
-            optionStats[option.statID][option.type] = 0
-        end
-
-        optionStats[option.statID][option.type] = optionStats[option.statID][option.type] + option.value
-    end
-
     local statPlusOption = {}
     local statPlusTotal = {}
-    for statID, option in pairs(optionStats) do
-        --[[
-            1: 직업 스탯 (+) ADD_STAT
-            2: 직업 스탯 (%) ADD_PERCENT_STAT
-            3: 아이템 스탯 (+) ADD_ITEM_PLUS_STAT
-            4: 아이템 스탯 (%) ADD_ITEM_PERCENT_STAT
-        ]]
-        local addStat = option[1] or 0
-        local addPercentStat = option[2] or 0
-        local addItemPlusStat = option[3] or 0
-        local addItemPercentStat = option[4] or 0
+    if titem.options and #titem.options > 0 then
+        local optionStats = {}
+        for _, option in ipairs(titem.options) do
+            if not optionStats[option.statID] then
+                optionStats[option.statID] = {}
+            end
 
-        statPlusOption[statID] = (addStat + addItemPlusStat) + (statPlus[statID] * (addItemPercentStat / 100))
-        statPlusTotal[statID] = statPlusOption[statID] + statPlus[statID]
+            if not optionStats[option.statID][option.type] then
+                optionStats[option.statID][option.type] = 0
+            end
 
-        desc = string.gsub(desc, "{{" .. Stat.GetKey(statID) .. "PlusOption}}", statPlusOption[statID])
-        desc = string.gsub(desc, "{{" .. Stat.GetKey(statID) .. "PlusTotal}}", statPlusTotal[statID])
+            optionStats[option.statID][option.type] = optionStats[option.statID][option.type] + option.value
+        end
+
+        for statID, option in pairs(optionStats) do
+            --[[
+                1: 직업 스탯 (+) ADD_STAT
+                2: 직업 스탯 (%) ADD_PERCENT_STAT
+                3: 아이템 스탯 (+) ADD_ITEM_PLUS_STAT
+                4: 아이템 스탯 (%) ADD_ITEM_PERCENT_STAT
+            ]]
+            local addStat = option[1] or 0
+            local addPercentStat = option[2] or 0
+            local addItemPlusStat = option[3] or 0
+            local addItemPercentStat = option[4] or 0
+
+            statPlusOption[statID] = (addStat + addItemPlusStat) + (statPlus[statID] * (addItemPercentStat / 100))
+            statPlusTotal[statID] = statPlusOption[statID] + statPlus[statID]
+        end
     end
 
-    for statID, value in pairs(statPlus) do
-        desc = string.gsub(desc, "{{" .. Stat.GetKey(statID) .. "Plus}}", value)
+    for statKey, suffix in string_gmatch(desc, "{(%a+)(Plus)}") do
+        local statId = Stat.GetId(statKey)
+        desc = string_gsub(desc, "{{" .. statKey .. "Plus}}", statPlus[statId])
     end
-
-    for statID, value in pairs(statPercent) do
-        desc = string.gsub(desc, "{{" .. Stat.GetKey(statID) .. "Percent}}", value)
+    
+    for statKey, suffix in string_gmatch(desc, "{(%a+)(Percent)}") do
+        local statId = Stat.GetId(statKey)
+        desc = string_gsub(desc, "{{" .. statKey .. "Percent}}", statPercent[statId])
     end
-
+    
+    for statKey, suffix in string_gmatch(desc, "{(%a+)(PlusOption)}") do
+        local statId = Stat.GetId(statKey)
+        desc = string_gsub(desc, "{{" .. statKey .. "PlusOption}}", statPlusOption[statId] or 0)
+    end
+    
+    for statKey, suffix in string_gmatch(desc, "{(%a+)(PlusTotal)}") do
+        local statId = Stat.GetId(statKey)
+        desc = string_gsub(desc, "{{" .. statKey .. "PlusTotal}}", statPlusTotal[statId] or 0)
+    end
 
     return desc
 end

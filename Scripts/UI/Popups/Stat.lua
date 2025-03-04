@@ -2,9 +2,9 @@ local Popup = require("UI/Components/Popup")
 local DragArea = require("UI/Components/DragArea")
 local PunkPanel = require("UI/Components/PunkPanel")
 
-UIStat = {}
+StatUI = {}
 
-function UIStat:Open()
+function StatUI:Open()
     local punkPanel = PunkPanel:new(Rect(0, 0, 312, 412))
     local statPopup = Popup:new(punkPanel.backgroundPanel, "Stat")
     local titleText = Text("스텟") {
@@ -38,8 +38,8 @@ function UIStat:Open()
     punkPanel:Build()
 end
 
-LClient.Events.onKeyDown:Add(function (key)
-    if key == "s" then
-        UIStat:Open()
-    end
-end)
+-- LClient.Events.onKeyDown:Add(function (key)
+--     if key == "s" then
+--         StatUI:Open()
+--     end
+-- end)
