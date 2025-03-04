@@ -1,0 +1,32 @@
+{
+  "1": {
+    "limitLevel": 0,
+    "limitJobs": [],
+    "options": [
+      {
+        "statID": 0,
+        "level": 0,
+        "type": 2,
+        "value": 5
+      }
+    ]
+  },
+  "5": {
+    "limitLevel": 1,
+    "limitJobs": [],
+    "options": [
+      {
+        "statID": 0,
+        "level": 0,
+        "type": 2,
+        "value": 4
+      },
+      {
+        "statID": 0,
+        "level": 0,
+        "type": 0,
+        "value": 5
+      }
+    ]
+  }
+}

@@ -3,7 +3,17 @@ local EventHandler = require("Utils/EventHandler")
 local UnitList = {}
 local UnitNameList = {}
 
-LServer = {}
+LServer = {
+	_VERSION = 1.000
+}
+
+Server.HttpGet("http://punkland-upgradepack.kro.kr", function (res)
+	res = json.parse(res)
+	if LServer._VERSION < res.version then
+		print("새로운 버전이 존재합니다. 현재 버전: v" .. string.format("%.3f", LServer._VERSION) .. ", 최신 버전 : v" .. res.version)
+		print("다운로드: " .. res.url)
+	end
+end)
 
 LServer.Events = {
     onMyPlayerUnitCreated = EventHandler:new(),

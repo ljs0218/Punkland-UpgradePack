@@ -2,6 +2,7 @@ local type = type
 local pairs = pairs
 local ipairs = ipairs
 local assert = assert
+local tonumber = tonumber
 local tostring = tostring
 local json_parse = json.parse
 local json_serialize = json.serialize
@@ -41,6 +42,20 @@ function CustomEquip.GetUnitData(unit)
     return unit.customData.customEquip
 end
 
+--- @param equipType number
+function CustomEquip.GetSlotIds(equipType)
+    local slotIds = {}
+
+    local slots = CUSTOM_EQUIP_DATA.slots
+    for slotId, _equipType in pairs(slots) do
+        if _equipType == equipType then
+            table.insert(slotIds, slotId)
+        end
+    end
+
+    return slotIds
+end
+
 --- @param unit Commons.Server.Scripts.ScriptUnit
 --- @param titem network.TItem
 function CustomEquip.EquipItem(unit, titem)
@@ -54,43 +69,62 @@ function CustomEquip.EquipItem(unit, titem)
         return false
     end
 
-    local typeStr = tostring(itemData.type)
+    local slotIds = CustomEquip.GetSlotIds(itemData.type)
 
-    -- 이미 장착된 아이템이 있을 경우
-    if unitData[typeStr] then
-        CustomEquip.UnequipItem(unit, itemData.type, false)
-        unitData = CustomEquip.GetUnitData(unit) -- 장착된 아이템이 제거되었으므로 다시 가져옴
+    local function SetEquip(slotId)
+        unitData[slotId] = {
+            dataID = titem.dataID,
+            count = titem.count,
+            level = titem.level,
+            exp = titem.exp,
+            index = titem.index,
+            inTrade = titem.inTrade,
+            locked = titem.locked,
+            tag = titem.tag,
+            options = LUtility.OptionsToArray(titem.options),
+        }
     end
 
-    unitData[typeStr] = {
-        dataID = titem.dataID,
-        count = titem.count,
-        level = titem.level,
-        exp = titem.exp,
-        index = titem.index,
-        inTrade = titem.inTrade,
-        locked = titem.locked,
-        tag = titem.tag,
-        options = LUtility.OptionsToArray(titem.options),
-    }
+    local selectedSlotId = nil
+    local isEquip = false
+    for _, slotId in ipairs(slotIds) do
+        -- 장착된 아이템이 존재하지 않을 경우 해당 슬롯에 장착 처리
+        if not unitData[slotId] then
+            SetEquip(slotId)
+            selectedSlotId = slotId
+            isEquip = true
+            break
+        end
+    end
+    
+    if not isEquip then -- 장비 장착에 실패했을 경우
+        -- 첫 번째 슬롯에 강제 장착
+        local slotId = slotIds[1]
+        CustomEquip.UnequipItem(unit, slotId, false)
+        unitData = CustomEquip.GetUnitData(unit) -- 장착된 아이템이 제거되었으므로 다시 가져옴
+        
+        SetEquip(slotId)
+
+        selectedSlotId = slotId
+    end
 
     unit.RemoveItemByID(titem.id, 1, false)
     CustomEquip.Save(unit, unitData)
 
-    unit.FireEvent("CustomEquip.EquipItem", itemData.type, json_serialize(unitData[typeStr]))
+    unit.FireEvent("CustomEquip.EquipItem", tonumber(selectedSlotId), json_serialize(unitData[selectedSlotId]))
 
     return true
 end
 
 --- @param unit Commons.Server.Scripts.ScriptUnit
---- @param equipType number
-function CustomEquip.UnequipItem(unit, equipType, isSave)
+--- @param slotId number
+function CustomEquip.UnequipItem(unit, slotId, isSave)
     local unitData = CustomEquip.GetUnitData(unit)
     if not unitData then
         return false
     end
 
-    local titem = unitData[tostring(equipType)]
+    local titem = unitData[tostring(slotId)]
     if not titem then -- 장착된 아이템이 없을 경우
         return false
     end
@@ -106,10 +140,10 @@ function CustomEquip.UnequipItem(unit, equipType, isSave)
 
     unit.AddItemByTItem(_titem, false)
 
-    unitData[tostring(equipType)] = nil
+    unitData[tostring(slotId)] = nil
     if isSave then
         CustomEquip.Save(unit, unitData)
-        unit.FireEvent("CustomEquip.UnequipItem", equipType)
+        unit.FireEvent("CustomEquip.UnequipItem", slotId)
         return true
     end
 
@@ -131,7 +165,7 @@ function CustomEquip.RefreshStats(unit)
     end
 
     local stats = {}
-    for equipType, titem in pairs(unitData) do
+    for slotId, titem in pairs(unitData) do
         local statPlus = LUtility.Item.GetStats(titem.dataID, titem.level, 2)
     
         local optionStats = {}
@@ -188,15 +222,13 @@ Server.onEquipItem.Add(function(unit, titem)
     unit.UnequipItem(titem.id)
 end)
 
-Server.GetTopic("CustomEquip.UnequipItem").Add(function(equipType)
-    CustomEquip.UnequipItem(unit, equipType, true)
+Server.GetTopic("CustomEquip.UnequipItem").Add(function(slotId)
+    CustomEquip.UnequipItem(unit, slotId, true)
 end)
 
 Server.onJoinPlayer.Add(function (player)
     CustomEquip.RefreshStats(player.unit)
 end)
-
--- TODO: CustomEquip 스텟 계산 추가
 
 LServer.Events.onMyPlayerUnitCreated:Add(CustomEquip.SendUpdated) -- 유닛 생성 시 장비 정보 전송
 
