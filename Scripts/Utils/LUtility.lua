@@ -104,12 +104,12 @@ function Item.ParseDesc(titem, desc)
 
     for statKey, suffix in string_gmatch(desc, "{(%a+)(Plus)}") do
         local statId = Stat.GetId(statKey)
-        desc = string_gsub(desc, "{{" .. statKey .. "Plus}}", statPlus[statId])
+        desc = string_gsub(desc, "{{" .. statKey .. "Plus}}", statPlus[statId] or 0)
     end
     
     for statKey, suffix in string_gmatch(desc, "{(%a+)(Percent)}") do
         local statId = Stat.GetId(statKey)
-        desc = string_gsub(desc, "{{" .. statKey .. "Percent}}", statPercent[statId])
+        desc = string_gsub(desc, "{{" .. statKey .. "Percent}}", statPercent[statId] or 0)
     end
     
     for statKey, suffix in string_gmatch(desc, "{(%a+)(PlusOption)}") do
