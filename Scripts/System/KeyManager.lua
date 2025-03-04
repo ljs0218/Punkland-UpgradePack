@@ -10,12 +10,19 @@ local function fireEvent(key)
     onKeyDown:Fire(string_lower(key))
 end
 
-Client.onTick.Add(function ()
+Client.onTick.Add(function()
     if Input.anyKeyDown then -- 아무 키나 눌렀을 때
         local inputString = Input.inputString
-        if inputString == "" then return end
+        if inputString == "" then
+            if Input.GetKeyDown(Input.KeyCode.Escape) then
+                fireEvent("esc")
+            end
+
+            return
+        end
 
         local len = string_len(inputString)
+
         if len > 1 then
             for i = 1, len do
                 fireEvent(string_sub(inputString, i, i))
