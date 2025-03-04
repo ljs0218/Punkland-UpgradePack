@@ -81,7 +81,8 @@ function ShopUI:Open()
     punkPanel:Build()
 end
 
-
+--- 상품 목록을 갱신합니다.
+--- @param productIds  table
 function ShopUI:RefreshProducts(productIds)
     local spacing = UI_SETTINGS.productSpacing
     local width = self.productScroll.height * 0.5 - (spacing * 0.5)
@@ -188,6 +189,8 @@ function ShopUI:RefreshProducts(productIds)
     contentPanel.SetSizeFit(true, true)
 end
 
+--- 서브 카테고리 목록을 갱신합니다.
+--- @param subCategoryIds table
 function ShopUI:RefreshSubCategory(subCategoryIds)
     ClearScrollContent(self.subCategoryScroll)
 
@@ -237,6 +240,7 @@ function ShopUI:RefreshSubCategory(subCategoryIds)
     contentPanel.SetSizeFit(true, true)
 end
 
+--- 카테고리 목록을 갱신합니다.
 function ShopUI:RefreshCategory()
     ClearScrollContent(self.categoryScroll)
 

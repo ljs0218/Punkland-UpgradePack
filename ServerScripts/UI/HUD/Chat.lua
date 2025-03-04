@@ -1,6 +1,9 @@
+local LServer_GetUnitId = LServer.GetUnitId
+local json_serialize = json.serialize
+
 -- 유틸리티 함수를 정의합니다.
 local function fireChatEvent(unit, name, text, type, serialize)
-    unit.FireEvent("AddChat", Utility.JSONSerialize({name = name, text = text, type = type}), serialize)
+    unit.FireEvent("AddChat", json_serialize({name = name, text = text, type = type}), serialize)
 end
 
 local function sendErrorMessage(unit, message)
@@ -25,7 +28,7 @@ Server.sayCallback = function(player, text, sayType, targetPlayerID)
         end
         return true
     elseif sayType == 1 then -- 전체
-        Server.FireEvent("AddChat", Utility.JSONSerialize({name = player.name, text = text, type = sayType}), true)
+        Server.FireEvent("AddChat", json_serialize({name = player.name, text = text, type = sayType}), true)
         return true
     elseif sayType == 2 or sayType == 3 then -- 귓속말
         if not targetUnit then
