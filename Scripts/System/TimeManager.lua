@@ -11,7 +11,7 @@ Client.GetTopic("TimeManager:ServerTime").Add(function (time)
 end)
 
 local function onEverySecond()
-    LClient.Events.onEverySecond:Fire()
+    LClient.Events.onEverySecond.Call()
     Client.RunLater(onEverySecond, 1)
 end
 onEverySecond()

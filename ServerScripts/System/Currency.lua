@@ -66,7 +66,7 @@ function Currency.SendUpdated(unit)
     }))
 end
 
-LServer.Events.onMyPlayerUnitCreated:Add(Currency.SendUpdated)
+LServer.Events.onMyPlayerUnitCreated.Add(Currency.SendUpdated)
 
 Server.GetTopic("Currency.Get").Add(function ()
     Currency.SendUpdated(unit)

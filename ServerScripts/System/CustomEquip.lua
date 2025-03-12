@@ -230,6 +230,6 @@ Server.onJoinPlayer.Add(function (player)
     CustomEquip.RefreshStats(player.unit)
 end)
 
-LServer.Events.onMyPlayerUnitCreated:Add(CustomEquip.SendUpdated) -- 유닛 생성 시 장비 정보 전송
+LServer.Events.onMyPlayerUnitCreated.Add(CustomEquip.SendUpdated) -- 유닛 생성 시 장비 정보 전송
 
 LServer.CustomEquip = CustomEquip

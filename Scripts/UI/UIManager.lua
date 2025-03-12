@@ -5,17 +5,17 @@ local UIManager = {
 function UIManager:SetVisible(isVisible)
     self.visible = isVisible
     if isVisible then
-        LClient.Events.onShowUI:Fire()
+        LClient.Events.onShowUI.Call()
     else
-        LClient.Events.onHideUI:Fire()
+        LClient.Events.onHideUI.Call()
     end
 end
 
-LClient.Events.onShowUI:Add(function ()
+LClient.Events.onShowUI.Add(function ()
     ScreenUI.quickSlotVisible = true
 end)
 
-LClient.Events.onHideUI:Add(function ()
+LClient.Events.onHideUI.Add(function ()
     ScreenUI.quickSlotVisible = false
 end)
 

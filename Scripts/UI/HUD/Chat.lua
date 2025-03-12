@@ -353,12 +353,12 @@ end
 
 CustomChat.Initialize()
 
-LClient.Events.onShowUI:Add(function ()
+LClient.Events.onShowUI.Add(function ()
     CustomChat.mainPanel.visible = true
     CustomChat.chat_plus.visible = true
 end)
 
-LClient.Events.onHideUI:Add(function ()
+LClient.Events.onHideUI.Add(function ()
     CustomChat.mainPanel.visible = false
     CustomChat.chat_plus.visible = false
 end)

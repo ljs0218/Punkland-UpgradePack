@@ -28,7 +28,7 @@ function ShopUI.Buy(productId)
     punkPanel.backgroundPanel.anchor = Anchor.MiddleCenter
     punkPanel.backgroundPanel.pivot = Point(0.5, 0.5)
 
-    shopPopup.onClose:Add(function()
+    shopPopup.onClose.Add(function()
         maskControl:Close()
     end)
 

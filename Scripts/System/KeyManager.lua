@@ -7,7 +7,7 @@ local string_lower = string.lower
 
 local function fireEvent(key)
     -- 소문자로 변환하여 이벤트 발생
-    onKeyDown:Fire(string_lower(key))
+    onKeyDown.Call(string_lower(key))
 end
 
 Client.onTick.Add(function()

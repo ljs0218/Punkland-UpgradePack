@@ -27,7 +27,7 @@ function PopupManager:OrderToFront(popup)
     self:AddPopup(popup)
 end
 
-LClient.Events.onKeyDown:Add(function (key)
+LClient.Events.onKeyDown.Add(function (key)
     if key == "esc" then
         local popup = PopupManager.popups[#PopupManager.popups]
         if not popup then return end

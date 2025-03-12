@@ -1,5 +1,3 @@
-local EventHandler = require("Utils/EventHandler")
-
 local UnitList = {}
 local UnitNameList = {}
 
@@ -16,7 +14,7 @@ Server.HttpGet("http://punkland-upgradepack.kro.kr", function (res)
 end)
 
 LServer.Events = {
-    onMyPlayerUnitCreated = EventHandler:new(),
+    onMyPlayerUnitCreated = EventPublisher(),
 }
 
 --- @param id number
@@ -45,7 +43,7 @@ Server.onLeavePlayer.Add(function(player)
 end)
 
 Server.GetTopic("LClient.onMyPlayerUnitCreated").Add(function()
-	LServer.Events.onMyPlayerUnitCreated:Fire(unit)
+	LServer.Events.onMyPlayerUnitCreated.Call(unit)
 end)
 
 -- Constants(상수) 로드

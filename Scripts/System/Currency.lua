@@ -49,7 +49,7 @@ Client.GetTopic("Currency.Update").Add(function (data)
     Currency.data = data
 end)
 
-LClient.Events.onEverySecond:Add(function ()
+LClient.Events.onEverySecond.Add(function ()
     Client.FireEvent("Currency.Get")
 end)
 

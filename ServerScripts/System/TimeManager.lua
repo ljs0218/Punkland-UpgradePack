@@ -1,15 +1,13 @@
-local EventHandler = require("Utils/EventHandler")
-
 local DAILY_CHECK = LServer.VAR.INTEGER.DAILY_CHECK
 local WEEKLY_CHECK = LServer.VAR.INTEGER.WEEKLY_CHECK
 local MONTHLY_CHECK = LServer.VAR.INTEGER.MONTHLY_CHECK
 local YEARLY_CHECK = LServer.VAR.INTEGER.YEARLY_CHECK
 
-LServer.Events.onDailyCheck = EventHandler:new()
-LServer.Events.onWeeklyCheck = EventHandler:new()
-LServer.Events.onMonthlyCheck = EventHandler:new()
-LServer.Events.onEverySecond = EventHandler:new()
-LServer.Events.onEvery10Seconds = EventHandler:new()
+LServer.Events.onDailyCheck = EventPublisher()
+LServer.Events.onWeeklyCheck = EventPublisher()
+LServer.Events.onMonthlyCheck = EventPublisher()
+LServer.Events.onEverySecond = EventPublisher()
+LServer.Events.onEvery10Seconds = EventPublisher()
 
 local TimeManager = {}
 
@@ -57,20 +55,20 @@ function TimeManager.CheckIn(unit)
     if daily ~= now.yday or yearly ~= now.year then
         unit.SetVar(DAILY_CHECK, now.yday)
         unit.SetVar(YEARLY_CHECK, now.year)
-        LServer.Events.onDailyCheck:Fire(unit)
+        LServer.Events.onDailyCheck.Call(unit)
     end
 
     local currentWeek = getWeekNumber(now)
     if weekly ~= currentWeek or yearly ~= now.year then
         unit.SetVar(WEEKLY_CHECK, currentWeek)
         unit.SetVar(YEARLY_CHECK, now.year)
-        LServer.Events.onWeeklyCheck:Fire(unit)
+        LServer.Events.onWeeklyCheck.Call(unit)
     end
 
     if monthly ~= now.month or yearly ~= now.year then
         unit.SetVar(MONTHLY_CHECK, now.month)
         unit.SetVar(YEARLY_CHECK, now.year)
-        LServer.Events.onMonthlyCheck:Fire(unit)
+        LServer.Events.onMonthlyCheck.Call(unit)
     end
 end
 
@@ -85,22 +83,22 @@ Server.onTick.Add(function (delta)
     t2 = t2 + delta
     if t1 >= 10 then
         t1 = 0
-        LServer.Events.onEvery10Seconds:Fire()
+        LServer.Events.onEvery10Seconds.Call()
     end
 
     if t2 >= 1 then
         t2 = 0
-        LServer.Events.onEverySecond:Fire()
+        LServer.Events.onEverySecond.Call()
     end
 end)
 
-LServer.Events.onEverySecond:Add(function()
+LServer.Events.onEverySecond.Add(function()
     for _, player in pairs(Server.players) do
         player.unit.FireEvent("TimeManager:ServerTime", os.time())
     end
 end)
 
-LServer.Events.onEvery10Seconds:Add(function()
+LServer.Events.onEvery10Seconds.Add(function()
     for _, player in pairs(Server.players) do
         TimeManager.CheckIn(player.unit)
     end

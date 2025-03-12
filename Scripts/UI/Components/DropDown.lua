@@ -1,5 +1,3 @@
-local EventHandler = require("Utils/EventHandler")
-
 local DropDown = {
     --- @type Game.Scripts.UI.Button
     button = nil,
@@ -30,7 +28,7 @@ local DropDown = {
 ---     "Item 3",
 --- })
 --- 
---- dropDown.onValueChanged:Add(function()
+--- dropDown.onValueChanged.Add(function()
 ---    print(dropDown.selectedIndex, dropDown.selectedItem)
 --- end)
 --- 
@@ -48,7 +46,7 @@ function DropDown:new(rect, items)
     local instance = setmetatable({}, self)
     self.__index = self
 
-    instance.onValueChanged = EventHandler:new()
+    instance.onValueChanged = EventPublisher()
     instance.interactable = true -- 상호작용 가능 여부
     instance.selectedIndex = 0
     instance.selectedItem = nil
@@ -120,7 +118,7 @@ function DropDown:ShowDropDown()
             self.label.text = item
             self.selectedIndex = i
             self.selectedItem = item
-            self.onValueChanged:Fire()
+            self.onValueChanged.Call()
 
             self.dropDown.Destroy()
             self.dropDown = nil

@@ -38,7 +38,7 @@ function StatUI:Open()
     punkPanel:Build()
 end
 
--- LClient.Events.onKeyDown:Add(function (key)
+-- LClient.Events.onKeyDown.Add(function (key)
 --     if key == "s" then
 --         StatUI:Open()
 --     end

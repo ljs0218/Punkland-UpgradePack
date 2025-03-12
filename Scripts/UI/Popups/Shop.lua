@@ -286,7 +286,7 @@ function ShopUI:RefreshCategory()
     end
 end
 
-LClient.Events.onKeyDown:Add(function(key)
+LClient.Events.onKeyDown.Add(function(key)
     if key == "`" then
         ShopUI:Open()
     end
