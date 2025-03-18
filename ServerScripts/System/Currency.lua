@@ -27,7 +27,11 @@ function Currency.AddAmount(unit, currencyId, amount)
     if currencyData.type == "gameMoney" then
         unit.AddGameMoney(amount)
     elseif currencyData.type == "item" then
-        unit.AddItem(currencyData.dataID, amount, false)
+        if amount < 0 then
+            unit.RemoveItem(currencyData.dataID, amount, false)
+        else
+            unit.AddItem(currencyData.dataID, amount, false)
+        end
     elseif currencyData.type == "var" then
         unit.SetVar(currencyData.dataID, unit.GetVar(currencyData.dataID) + amount)
     end
