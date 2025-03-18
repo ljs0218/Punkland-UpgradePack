@@ -47,13 +47,13 @@ HUD.menu_button[4].onClick.Add(
     end
 )
 
-LClient.Events.onShowUI.Add(function ()
+LClient.Events.onShowUI:Add(function ()
     for _, button in pairs(HUD.menu_button) do
         button.visible = true
     end
 end)
 
-LClient.Events.onHideUI.Add(function ()
+LClient.Events.onHideUI:Add(function ()
     for _, button in pairs(HUD.menu_button) do
         button.visible = false
     end

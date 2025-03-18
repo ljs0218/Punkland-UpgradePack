@@ -65,14 +65,14 @@ local function UpdateArrowPosition()
     end
 end
 
-LClient.Events.onMyPlayerUnitCreated.Add(function ()
+LClient.Events.onMyPlayerUnitCreated:Add(function ()
     Client.onTick.Add(UpdateArrowPosition)
 end)
 
-LClient.Events.onShowUI.Add(function ()
+LClient.Events.onShowUI:Add(function ()
     Client.controller.visible = true
 end)
 
-LClient.Events.onHideUI.Add(function ()
+LClient.Events.onHideUI:Add(function ()
     Client.controller.visible = false
 end)

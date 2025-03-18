@@ -104,13 +104,13 @@ Client.GetTopic("CustomEquip.UnequipItem").Add(function (slotId)
     end
 end)
 
-LClient.Events.onKeyDown.Add(function (key)
+LClient.Events.onKeyDown:Add(function (key)
     if key == "i" then
         ScreenUI.ShowPopup("Bag")
     end
 end)
 
-LClient.Events.onMyPlayerUnitCreated.Add(function ()
+LClient.Events.onMyPlayerUnitCreated:Add(function ()
     Client.onTick.Add(function ()
         if ScreenUI.IsShowPopup("Bag") then
             CustomEquipUI:Open()

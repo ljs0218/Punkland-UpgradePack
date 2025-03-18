@@ -41,7 +41,7 @@ end
 
 wrapper.SetSizeFit(true, true)
 
-LClient.Events.onEverySecond.Add(function()
+LClient.Events.onEverySecond:Add(function()
     for currencyId, currencyControl in pairs(currencyControls) do
         currencyControl.textControl.text = LUtility.FormatNumber(Currency.GetAmount(tonumber(currencyId)))
         currencyControl.textControl.SetSizeFit(true, true)
@@ -52,10 +52,10 @@ LClient.Events.onEverySecond.Add(function()
     wrapper.ForceRebuildLayoutImmediate()
 end)
 
-LClient.Events.onShowUI.Add(function()
+LClient.Events.onShowUI:Add(function()
     wrapper.visible = true
 end)
 
-LClient.Events.onHideUI.Add(function()
+LClient.Events.onHideUI:Add(function()
     wrapper.visible = false
 end)

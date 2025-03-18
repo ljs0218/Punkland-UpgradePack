@@ -229,11 +229,11 @@ local function updateGauge()
     end
 end
 
-LClient.Events.onMyPlayerUnitCreated.Add(function ()
+LClient.Events.onMyPlayerUnitCreated:Add(function ()
     Client.onTick.Add(updateGauge)
 end)
 
-LClient.Events.onShowUI.Add(function ()
+LClient.Events.onShowUI:Add(function ()
     HPbg.visible = true
     MPbg.visible = true
     HP.visible = true
@@ -243,7 +243,7 @@ LClient.Events.onShowUI.Add(function ()
     XPtxt.visible = true
 end)
 
-LClient.Events.onHideUI.Add(function ()
+LClient.Events.onHideUI:Add(function ()
     HPbg.visible = false
     MPbg.visible = false
     HP.visible = false

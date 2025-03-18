@@ -134,7 +134,7 @@ function ItemPopup:new(titem, position)
             Client.height - punkPanel.backgroundPanel.height)
     end
 
-    itemPopup.onClose.Add(function()
+    itemPopup.onClose:Add(function()
         maskControl:Close()
     end)
 
