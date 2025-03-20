@@ -4,7 +4,7 @@ local UnitList = {}
 local UnitNameList = {}
 
 LServer = {
-	_VERSION = 1.002
+	_VERSION = 1.003
 }
 
 Server.HttpGet("http://punkland-upgradepack.kro.kr", function (res)
