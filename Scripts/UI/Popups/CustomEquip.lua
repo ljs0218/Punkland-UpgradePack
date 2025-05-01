@@ -48,7 +48,12 @@ function CustomEquipUI:Open()
         end
 
         slotButton.onClick.Add(function ()
-            local itemPopup = ItemPopup:new(CustomEquip.GetEquipItem(slotId))
+            local equippedItem = CustomEquip.GetEquipItem(slotId)
+            if not equippedItem then
+                return
+            end
+            
+            local itemPopup = ItemPopup:new(equippedItem)
             itemPopup:SetButton("해제", function ()
                 CustomEquip.UnequipItem(slotId)
                 itemPopup:Close()
